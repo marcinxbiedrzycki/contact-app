@@ -1,0 +1,32 @@
+version: '3.6'
+
+x-logging: &logging
+  logging: { driver: none }
+
+services:
+  php:
+    build: _misc/docker/php
+    volumes: [.:/app]
+  web:
+    build: _misc/docker/web
+    volumes:
+      - ./public:/app/php
+      - phpmyadmin-files:/app/phpmyadmin
+    ports: [8000-8001:8000-8001]
+  database:
+    build: _misc/docker/database
+    volumes:
+      - database-data:/var/lib/mysql
+      - ./_misc/docker/database/schema:/docker-entrypoint-initdb.d
+  phpmyadmin:
+    <<: *logging
+    build: _misc/docker/phpmyadmin
+    volumes: [phpmyadmin-files:/var/www/html]
+  mailhog:
+    <<: *logging
+    image: mailhog/mailhog
+    ports:
+      - 8002:8025
+volumes:
+  database-data:
+  phpmyadmin-files:
