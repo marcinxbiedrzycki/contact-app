@@ -22,11 +22,6 @@ services:
     <<: *logging
     build: _misc/docker/phpmyadmin
     volumes: [phpmyadmin-files:/var/www/html]
-  mailhog:
-    <<: *logging
-    image: mailhog/mailhog
-    ports:
-      - 8002:8025
 volumes:
   database-data:
   phpmyadmin-files:

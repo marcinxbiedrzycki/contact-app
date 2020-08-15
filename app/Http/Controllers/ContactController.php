@@ -27,7 +27,7 @@ final class ContactController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
-    public function store(Request $request): void
+    public function store(Request $request): RedirectResponse
     {
         $contact = Contact::createContact(
             $request->firstName,
@@ -38,6 +38,9 @@ final class ContactController extends Controller
 
         $contact->save();
         $this->dispatch(new AddContactJob($contact));
+
+        return redirect()->route('contact.index')
+            ->with('success', 'Contact updated successfully');
     }
 
     public function create(): View
